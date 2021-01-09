@@ -19,7 +19,11 @@ public class CharacterAnimationEvents : MonoBehaviour
 
     void AttackEnd()
     {
-        character.PerformAttack();
         character.SetState(Character.State.RunningFromEnemy);
+    }
+
+    void AttackEvent()
+    {
+        character.PerformAttack();
     }
 }
