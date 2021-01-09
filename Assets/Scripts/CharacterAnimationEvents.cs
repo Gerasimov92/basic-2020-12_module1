@@ -13,11 +13,13 @@ public class CharacterAnimationEvents : MonoBehaviour
 
     void ShootEnd()
     {
+        character.PerformAttack();
         character.SetState(Character.State.Idle);
     }
 
     void AttackEnd()
     {
+        character.PerformAttack();
         character.SetState(Character.State.RunningFromEnemy);
     }
 }

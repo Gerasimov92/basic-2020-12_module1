@@ -13,6 +13,7 @@ public class Character : MonoBehaviour
         Attack,
         BeginShoot,
         Shoot,
+        Dead
     }
 
     public enum Weapon
@@ -23,9 +24,10 @@ public class Character : MonoBehaviour
 
     Animator animator;
     State state;
+    private Character _enemy;
 
     public Weapon weapon;
-    public Transform target;
+    public Character target;
     public float runSpeed;
     public float distanceFromEnemy;
     Vector3 originalPosition;
@@ -43,16 +45,30 @@ public class Character : MonoBehaviour
     {
         state = newState;
     }
+    
+    public void PerformAttack()
+    {
+        target.Attacked();
+    }
+    
+    void Attacked()
+    {
+        SetState(Character.State.Dead);
+    }
 
     [ContextMenu("Attack")]
     void AttackEnemy()
     {
+        if (state == State.Dead)
+            return;
+        
         switch (weapon) {
             case Weapon.Bat:
-                state = State.RunningToEnemy;
+                SetState(State.RunningToEnemy);
                 break;
+            
             case Weapon.Pistol:
-                state = State.BeginShoot;
+                SetState(State.BeginShoot);
                 break;
         }
     }
@@ -91,19 +107,19 @@ public class Character : MonoBehaviour
 
             case State.RunningToEnemy:
                 animator.SetFloat("Speed", runSpeed);
-                if (RunTowards(target.position, distanceFromEnemy))
-                    state = State.BeginAttack;
+                if (RunTowards(target.transform.position, distanceFromEnemy))
+                    SetState(State.BeginAttack);
                 break;
 
             case State.RunningFromEnemy:
                 animator.SetFloat("Speed", runSpeed);
                 if (RunTowards(originalPosition, 0.0f))
-                    state = State.Idle;
+                    SetState(State.Idle);
                 break;
 
             case State.BeginAttack:
                 animator.SetTrigger("MeleeAttack");
-                state = State.Attack;
+                SetState(State.Attack);
                 break;
 
             case State.Attack:
@@ -111,10 +127,14 @@ public class Character : MonoBehaviour
 
             case State.BeginShoot:
                 animator.SetTrigger("Shoot");
-                state = State.Shoot;
+                SetState(State.Shoot);
                 break;
 
             case State.Shoot:
+                break;
+            
+            case State.Dead:
+                animator.SetTrigger("Dead");
                 break;
         }
     }
