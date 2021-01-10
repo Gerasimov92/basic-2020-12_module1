@@ -62,6 +62,9 @@ public class Character : MonoBehaviour
     {
         if (state == State.Dead)
             return;
+
+        if (target.IsDead())
+            return;
         
         switch (weapon) {
             case Weapon.Bat:
@@ -142,5 +145,10 @@ public class Character : MonoBehaviour
                 animator.SetTrigger("Dead");
                 break;
         }
+    }
+
+    bool IsDead()
+    {
+        return state == State.Dead;
     }
 }
