@@ -3,16 +3,21 @@ using System.Collections;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 internal sealed class GameController : MonoBehaviour
 {
     public Button attackButton;
     public CanvasGroup buttonPanel;
-    
+    public CanvasGroup pauseButton;
+    public CanvasGroup pauseMenu;
+
     public Character[] playerCharacter;
     public Character[] enemyCharacter;
     Character currentTarget;
     bool waitingForInput;
+
+    private bool buttonPanelState;
 
     Character FirstAliveCharacter(Character[] characters)
     {
@@ -63,6 +68,35 @@ internal sealed class GameController : MonoBehaviour
                 return;
             }
         }
+    }
+
+    public void PauseGame()
+    {
+        Time.timeScale = 0;
+        buttonPanelState = buttonPanel.interactable;
+        Utility.SetCanvasGroupEnabled(pauseButton, false);
+        Utility.SetCanvasGroupEnabled(buttonPanel, false);
+        Utility.SetCanvasGroupEnabled(pauseMenu, true);
+    }
+
+    public void ResumeGame()
+    {
+        Utility.SetCanvasGroupEnabled(pauseMenu, false);
+        Utility.SetCanvasGroupEnabled(pauseButton, true);
+        Utility.SetCanvasGroupEnabled(buttonPanel, buttonPanelState);
+        Time.timeScale = 1;
+    }
+
+    public void RestartLevel()
+    {
+        Time.timeScale = 1;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void ExitLevel()
+    {
+        Time.timeScale = 1;
+        SceneManager.LoadScene("MainMenu");
     }
 
     IEnumerator GameLoop()
@@ -120,6 +154,7 @@ internal sealed class GameController : MonoBehaviour
     void Start()
     {
         attackButton.onClick.AddListener(PlayerAttack);
+        Utility.SetCanvasGroupEnabled(pauseMenu, false);
         Utility.SetCanvasGroupEnabled(buttonPanel, false);
         StartCoroutine(GameLoop());
     }
