@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 internal sealed class GameController : MonoBehaviour
 {
@@ -11,6 +12,8 @@ internal sealed class GameController : MonoBehaviour
     public CanvasGroup buttonPanel;
     public CanvasGroup pauseButton;
     public CanvasGroup pauseMenu;
+    public CanvasGroup endGameMenu;
+    public TextMeshProUGUI gameResultView;
 
     public Character[] playerCharacter;
     public Character[] enemyCharacter;
@@ -27,11 +30,13 @@ internal sealed class GameController : MonoBehaviour
     void PlayerWon()
     {
         Debug.Log("Player won.");
+        ShowGameResult(true);
     }
 
     void PlayerLost()
     {
         Debug.Log("Player lost.");
+        ShowGameResult(false);
     }
 
     bool CheckEndGame()
@@ -154,8 +159,18 @@ internal sealed class GameController : MonoBehaviour
     void Start()
     {
         attackButton.onClick.AddListener(PlayerAttack);
+        Utility.SetCanvasGroupEnabled(endGameMenu, false);
         Utility.SetCanvasGroupEnabled(pauseMenu, false);
         Utility.SetCanvasGroupEnabled(buttonPanel, false);
         StartCoroutine(GameLoop());
+    }
+
+    void ShowGameResult(bool won)
+    {
+        gameResultView.text = won ? "You won!" : "You lose =(";
+        Utility.SetCanvasGroupEnabled(pauseButton, false);
+        Utility.SetCanvasGroupEnabled(pauseMenu, false);
+        Utility.SetCanvasGroupEnabled(buttonPanel, false);
+        Utility.SetCanvasGroupEnabled(endGameMenu, true);
     }
 }
