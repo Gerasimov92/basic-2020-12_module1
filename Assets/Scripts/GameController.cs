@@ -9,7 +9,7 @@ using TMPro;
 internal sealed class GameController : MonoBehaviour
 {
     public Button attackButton;
-    public CanvasGroup buttonPanel;
+    public UiElement buttonPanel;
     public CanvasGroup pauseButton;
     public CanvasGroup pauseMenu;
     public CanvasGroup endGameMenu;
@@ -77,18 +77,19 @@ internal sealed class GameController : MonoBehaviour
 
     public void PauseGame()
     {
-        Time.timeScale = 0;
-        buttonPanelState = buttonPanel.interactable;
+        buttonPanelState = buttonPanel.IsVisible();
+        buttonPanel.Hide();
         Utility.SetCanvasGroupEnabled(pauseButton, false);
-        Utility.SetCanvasGroupEnabled(buttonPanel, false);
         Utility.SetCanvasGroupEnabled(pauseMenu, true);
+        Time.timeScale = 0;
     }
 
     public void ResumeGame()
     {
         Utility.SetCanvasGroupEnabled(pauseMenu, false);
         Utility.SetCanvasGroupEnabled(pauseButton, true);
-        Utility.SetCanvasGroupEnabled(buttonPanel, buttonPanelState);
+        if(buttonPanelState)
+            buttonPanel.Show();
         Time.timeScale = 1;
     }
 
@@ -118,13 +119,13 @@ internal sealed class GameController : MonoBehaviour
                     break;
 
                 currentTarget.targetIndicator.gameObject.SetActive(true);
-                Utility.SetCanvasGroupEnabled(buttonPanel, true);
+                buttonPanel.Show(true);
 
                 waitingForInput = true;
                 while (waitingForInput)
                     yield return null;
-
-                Utility.SetCanvasGroupEnabled(buttonPanel, false);
+                
+                buttonPanel.Hide(true);
                 currentTarget.targetIndicator.gameObject.SetActive(false);
 
                 player.target = currentTarget.transform;
@@ -161,16 +162,16 @@ internal sealed class GameController : MonoBehaviour
         attackButton.onClick.AddListener(PlayerAttack);
         Utility.SetCanvasGroupEnabled(endGameMenu, false);
         Utility.SetCanvasGroupEnabled(pauseMenu, false);
-        Utility.SetCanvasGroupEnabled(buttonPanel, false);
+        buttonPanel.Hide();
         StartCoroutine(GameLoop());
     }
 
     void ShowGameResult(bool won)
     {
         gameResultView.text = won ? "You won!" : "You lose =(";
+        buttonPanel.Hide();
         Utility.SetCanvasGroupEnabled(pauseButton, false);
         Utility.SetCanvasGroupEnabled(pauseMenu, false);
-        Utility.SetCanvasGroupEnabled(buttonPanel, false);
         Utility.SetCanvasGroupEnabled(endGameMenu, true);
     }
 }

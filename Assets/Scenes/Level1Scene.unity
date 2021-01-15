@@ -3387,6 +3387,7 @@ GameObject:
   - component: {fileID: 1454580625}
   - component: {fileID: 1454580624}
   - component: {fileID: 1454580628}
+  - component: {fileID: 1454580629}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -3488,6 +3489,19 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &1454580629
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1454580623}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfe3a10795c74cf6b187ed6b6058b4a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canvasGroup: {fileID: 1454580628}
 --- !u!1 &1467848178
 GameObject:
   m_ObjectHideFlags: 0
@@ -4766,7 +4780,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attackButton: {fileID: 1614144351}
-  buttonPanel: {fileID: 1454580628}
+  buttonPanel: {fileID: 1454580629}
   pauseButton: {fileID: 51309234}
   pauseMenu: {fileID: 1611734252}
   endGameMenu: {fileID: 631012661}
