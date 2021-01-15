@@ -71,6 +71,9 @@ internal sealed class GameController : MonoBehaviour
         while (!CheckEndGame()) {
             foreach (var player in playerCharacter)
             {
+                if (player.IsDead())
+                    continue;
+                
                 currentTarget = FirstAliveCharacter(enemyCharacter);
                 if (currentTarget == null)
                     break;
@@ -96,6 +99,9 @@ internal sealed class GameController : MonoBehaviour
 
             foreach (var enemy in enemyCharacter)
             {
+                if (enemy.IsDead())
+                    continue;
+                
                 Character target = FirstAliveCharacter(playerCharacter);
                 if (target == null)
                     break;
