@@ -75,6 +75,9 @@ public class Character : MonoBehaviour
         if (IsDead())
             return;
 
+        DamageEffect damageEffect = GetComponent<DamageEffect>();
+        if (damageEffect) damageEffect.ShowDamageEffect();
+
         health.ApplyDamage(1.0f); // FIXME: захардкожено
         if (health.current <= 0.0f)
             state = State.BeginDying;
