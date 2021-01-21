@@ -27,12 +27,14 @@ public class Character : MonoBehaviour
 
     private Animator animator;
     private State state;
-
     public Weapon weapon;
     public Transform target;
     public TargetIndicator targetIndicator;
     public float runSpeed;
     public float distanceFromEnemy;
+    private PlaySound playSound;
+    public string damageSoundName;
+    
     private Vector3 originalPosition;
     private Quaternion originalRotation;
     private Health health;
@@ -45,6 +47,7 @@ public class Character : MonoBehaviour
     void Start()
     {
         animator = GetComponentInChildren<Animator>();
+        playSound = GetComponentInChildren<PlaySound>();
         state = State.Idle;
         health = GetComponent<Health>();
         targetIndicator = GetComponentInChildren<TargetIndicator>(true);
@@ -77,6 +80,7 @@ public class Character : MonoBehaviour
 
         DamageEffect damageEffect = GetComponent<DamageEffect>();
         if (damageEffect) damageEffect.ShowDamageEffect();
+        if (playSound) playSound.Play(damageSoundName);
 
         health.ApplyDamage(1.0f); // FIXME: захардкожено
         if (health.current <= 0.0f)
