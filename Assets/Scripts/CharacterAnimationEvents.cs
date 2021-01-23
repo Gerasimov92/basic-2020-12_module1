@@ -2,6 +2,7 @@
 
 public class CharacterAnimationEvents : MonoBehaviour
 {
+    public Animation shootAnimation;
     Character character;
 
     void Start()
@@ -26,6 +27,8 @@ public class CharacterAnimationEvents : MonoBehaviour
 
     void DoDamage()
     {
+        if (shootAnimation) shootAnimation.Play();
+        
         Character targetCharacter = character.target.GetComponent<Character>();
         targetCharacter.DoDamage();
     }
