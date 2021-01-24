@@ -3981,6 +3981,11 @@ PrefabInstance:
       propertyPath: distanceFromEnemy
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 8868455153252977861, guid: 268fe3416a5e8cf4694a8632f9cb8c4d,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.34
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 268fe3416a5e8cf4694a8632f9cb8c4d, type: 3}
 --- !u!1 &1526120233
@@ -5510,6 +5515,11 @@ PrefabInstance:
         type: 3}
       propertyPath: distanceFromEnemy
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8868455153252977861, guid: 268fe3416a5e8cf4694a8632f9cb8c4d,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.34
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 268fe3416a5e8cf4694a8632f9cb8c4d, type: 3}
