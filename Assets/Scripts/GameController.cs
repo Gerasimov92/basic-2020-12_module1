@@ -2,25 +2,15 @@
 using System.Collections;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.SceneManagement;
-using TMPro;
 
 internal sealed class GameController : MonoBehaviour
 {
-    public Button attackButton;
-    public UiElement buttonPanel;
-    public CanvasGroup pauseButton;
-    public CanvasGroup pauseMenu;
-    public CanvasGroup endGameMenu;
-    public TextMeshProUGUI gameResultView;
-
+    public UiController uiController;
     public Character[] playerCharacter;
     public Character[] enemyCharacter;
+
     Character currentTarget;
     bool waitingForInput;
-
-    private bool buttonPanelState;
 
     Character FirstAliveCharacter(Character[] characters)
     {
@@ -30,13 +20,13 @@ internal sealed class GameController : MonoBehaviour
     void PlayerWon()
     {
         Debug.Log("Player won.");
-        ShowGameResult(true);
+        uiController.ShowGameResult(true);
     }
 
     void PlayerLost()
     {
         Debug.Log("Player lost.");
-        ShowGameResult(false);
+        uiController.ShowGameResult(false);
     }
 
     bool CheckEndGame()
@@ -54,13 +44,11 @@ internal sealed class GameController : MonoBehaviour
         return false;
     }
 
-    //[ContextMenu("Player Attack")]
     public void PlayerAttack()
     {
         waitingForInput = false;
     }
 
-    //[ContextMenu("Next Target")]
     public void NextTarget()
     {
         int index = Array.IndexOf(enemyCharacter, currentTarget);
@@ -75,35 +63,6 @@ internal sealed class GameController : MonoBehaviour
         }
     }
 
-    public void PauseGame()
-    {
-        buttonPanelState = buttonPanel.IsVisible();
-        buttonPanel.Hide();
-        Utility.SetCanvasGroupEnabled(pauseButton, false);
-        Utility.SetCanvasGroupEnabled(pauseMenu, true);
-        Time.timeScale = 0;
-    }
-
-    public void ResumeGame()
-    {
-        Utility.SetCanvasGroupEnabled(pauseMenu, false);
-        Utility.SetCanvasGroupEnabled(pauseButton, true);
-        if(buttonPanelState)
-            buttonPanel.Show();
-        Time.timeScale = 1;
-    }
-
-    public void RestartLevel()
-    {
-        Time.timeScale = 1;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-    }
-
-    public void ExitLevel()
-    {
-        Time.timeScale = 1;
-        SceneManager.LoadScene("MainMenu");
-    }
 
     IEnumerator GameLoop()
     {
@@ -119,13 +78,13 @@ internal sealed class GameController : MonoBehaviour
                     break;
 
                 currentTarget.targetIndicator.gameObject.SetActive(true);
-                buttonPanel.Show(true);
+                uiController.controlMenu.Show(true);
 
                 waitingForInput = true;
                 while (waitingForInput)
                     yield return null;
                 
-                buttonPanel.Hide(true);
+                uiController.controlMenu.Hide(true);
                 currentTarget.targetIndicator.gameObject.SetActive(false);
 
                 player.target = currentTarget.transform;
@@ -159,19 +118,7 @@ internal sealed class GameController : MonoBehaviour
     
     void Start()
     {
-        attackButton.onClick.AddListener(PlayerAttack);
-        Utility.SetCanvasGroupEnabled(endGameMenu, false);
-        Utility.SetCanvasGroupEnabled(pauseMenu, false);
-        buttonPanel.Hide();
+        uiController.SetControlCallbacks(NextTarget, PlayerAttack);
         StartCoroutine(GameLoop());
-    }
-
-    void ShowGameResult(bool won)
-    {
-        gameResultView.text = won ? "You won!" : "You lose =(";
-        buttonPanel.Hide();
-        Utility.SetCanvasGroupEnabled(pauseButton, false);
-        Utility.SetCanvasGroupEnabled(pauseMenu, false);
-        Utility.SetCanvasGroupEnabled(endGameMenu, true);
     }
 }

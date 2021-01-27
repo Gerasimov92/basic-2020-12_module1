@@ -1,9 +1,10 @@
 ﻿using System.Collections;
 using UnityEngine;
 
+[RequireComponent(typeof(CanvasGroup))]
 public class UiElement : MonoBehaviour
 {
-    public CanvasGroup canvasGroup;
+    private CanvasGroup canvasGroup;
     private Coroutine lastCoroutine;
     
     public void Show(bool smooth = false)
@@ -47,5 +48,12 @@ public class UiElement : MonoBehaviour
             canvasGroup.alpha = Mathf.Lerp(alpha, value, t);
             yield return null;
         }
+
+        canvasGroup.alpha = value;
+    }
+
+    void Start()
+    {
+        canvasGroup = GetComponent<CanvasGroup>();
     }
 }
