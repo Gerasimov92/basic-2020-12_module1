@@ -4,31 +4,47 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Audio;
+using UnityEngine.EventSystems;
 
 public class SoundSettings : MonoBehaviour
 {
-    public Slider _slider;
-    public AudioMixer _audioMixer;
-    public string _groupName;
+    [SerializeField]
+    private List<MixerChannel> channels = new List<MixerChannel>();
+    public AudioMixer audioMixer;
 
     private void Start()
     {
-        _audioMixer.GetFloat(_groupName, out var value);
-        _slider.value = value;
-    }
-
-    private void OnEnable()
-    {
-        _slider.onValueChanged.AddListener(SliderValueChanged);
-    }
-
-    private void OnDisable()
-    {
-        _slider.onValueChanged.RemoveListener(SliderValueChanged);
+        foreach (var ch in channels)
+        {
+            ch.slider.onValueChanged.AddListener(SliderValueChanged);
+            float value = PlayerPrefs.GetFloat(ch.name, 0);
+            SetVolume(ch.name, value);
+            ch.slider.value = value;
+        }
     }
 
     private void SliderValueChanged(float value)
     {
-        _audioMixer.SetFloat(_groupName, value);
+        var sender = EventSystem.current.currentSelectedGameObject;
+        foreach (var ch in channels)
+        {
+            if (ch.slider.gameObject == sender)
+            {
+                SetVolume(ch.name, value);
+            }
+        }
+    }
+
+    private void SetVolume(string name, float value)
+    {
+        audioMixer.SetFloat(name, value);
+        PlayerPrefs.SetFloat(name, value);
+    }
+
+    [Serializable]
+    private class MixerChannel
+    {
+        public string name;
+        public Slider slider;
     }
 }
