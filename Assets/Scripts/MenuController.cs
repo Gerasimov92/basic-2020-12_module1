@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MenuController : MonoBehaviour
 {
@@ -16,6 +17,7 @@ public class MenuController : MonoBehaviour
     public CanvasGroup mainScreen;
     public CanvasGroup newGameScreen;
     public CanvasGroup settingsScreen;
+    private PlaySound soundPlayer;
 
     void SetCurrentScreen(Screen screen)
     {
@@ -26,6 +28,13 @@ public class MenuController : MonoBehaviour
     
     void Start()
     {
+        soundPlayer = GetComponent<PlaySound>();
+
+        foreach (var button in GetComponentsInChildren<Button>())
+        {
+            button.onClick.AddListener(PlayClickSound);
+        }
+
         SetCurrentScreen(Screen.Main);
     }
 
@@ -63,5 +72,11 @@ public class MenuController : MonoBehaviour
     public void ExitGame()
     {
         Application.Quit();
+    }
+
+    public void PlayClickSound()
+    {
+        if(soundPlayer)
+            soundPlayer.Play("Click");
     }
 }

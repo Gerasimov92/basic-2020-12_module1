@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e0303827938f8548969f8d67e163022, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shootAnimation: {fileID: 0}
 --- !u!1 &5927590002293556412
 GameObject:
   m_ObjectHideFlags: 0
@@ -110,6 +111,25 @@ Animation:
   m_PlayAutomatically: 0
   m_AnimatePhysics: 0
   m_CullingType: 0
+--- !u!114 &1869890354320727736
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8432393290777526023}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed3d19d9b22e8264eb8b90aa78e12771, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dataSounds:
+  - name: ShootHit
+    audioClip: {fileID: 8300000, guid: ae63fc2598dac794f8afa2b355992339, type: 3}
+  - name: TakeDamage
+    audioClip: {fileID: 8300000, guid: 20b377534885f8a4f8ef588309f51620, type: 3}
+  - name: Death
+    audioClip: {fileID: 8300000, guid: 7e6c5c4add637db46b23219048b77bec, type: 3}
 --- !u!1001 &26255396621002682
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -189,6 +209,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 73e1432563d8c1a48839445fb70ed3d9, type: 3}
+--- !u!1 &8432393290777526023 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8455690963370006717, guid: 73e1432563d8c1a48839445fb70ed3d9,
+    type: 3}
+  m_PrefabInstance: {fileID: 26255396621002682}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7307580280333625675 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7292729299804049137, guid: 73e1432563d8c1a48839445fb70ed3d9,

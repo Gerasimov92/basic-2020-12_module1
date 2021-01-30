@@ -26,6 +26,29 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damageEffect: {fileID: 8869885431023136851}
+--- !u!114 &7470053231154250701
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3591750979723153889}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed3d19d9b22e8264eb8b90aa78e12771, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dataSounds:
+  - name: BatHit
+    audioClip: {fileID: 8300000, guid: 65e955753ec98f048a8edac491403be9, type: 3}
+  - name: HandHit
+    audioClip: {fileID: 8300000, guid: 45443a33689f4f04c804293db72b978c, type: 3}
+  - name: TakeDamage
+    audioClip: {fileID: 8300000, guid: 20b377534885f8a4f8ef588309f51620, type: 3}
+  - name: Death
+    audioClip: {fileID: 8300000, guid: 6789299ea9ce460479ee356feb633e6a, type: 3}
+  - name: Steps
+    audioClip: {fileID: 8300000, guid: 7ac2f05b18cb7304c87334b21c05024b, type: 3}
 --- !u!1001 &2363163244210414545
 PrefabInstance:
   m_ObjectHideFlags: 0

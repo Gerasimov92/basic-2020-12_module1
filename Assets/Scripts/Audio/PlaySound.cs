@@ -15,11 +15,25 @@ public class PlaySound : MonoBehaviour
         _audioSource = GetComponent<AudioSource>();
     }
 
-    public void Play(string nameClip)
+    public void Play(string nameClip, bool loop = false)
     {
         var audioClip = GetAudioClip(nameClip);
-        _audioSource.clip = audioClip;
-        _audioSource.Play();
+        if (_audioSource.clip != audioClip)
+        {
+            _audioSource.loop = loop;
+            _audioSource.clip = audioClip;
+            _audioSource.Play();
+        }
+        else if (!_audioSource.isPlaying)
+        {
+            _audioSource.loop = loop;
+            _audioSource.Play();
+        }
+    }
+
+    public void Stop()
+    {
+        _audioSource.Stop();
     }
 
     private AudioClip GetAudioClip(string nameClip)

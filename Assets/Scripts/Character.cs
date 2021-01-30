@@ -41,6 +41,7 @@ public class Character : MonoBehaviour
     private static readonly int Punch = Animator.StringToHash("Punch");
     private static readonly int Shoot = Animator.StringToHash("Shoot");
     private static readonly int MeleeAttack = Animator.StringToHash("MeleeAttack");
+    private PlaySound soundPlayer;
 
     void Start()
     {
@@ -48,6 +49,7 @@ public class Character : MonoBehaviour
         state = State.Idle;
         health = GetComponent<Health>();
         targetIndicator = GetComponentInChildren<TargetIndicator>(true);
+        soundPlayer = GetComponent<PlaySound>();
         originalPosition = transform.position;
         originalRotation = transform.rotation;
     }
@@ -77,6 +79,9 @@ public class Character : MonoBehaviour
         
         DamageEffect damageEffect = GetComponent<DamageEffect>();
         if (damageEffect) damageEffect.ShowDamageEffect();
+
+        if (soundPlayer)
+            soundPlayer.Play("TakeDamage");
 
         health.ApplyDamage(1.0f); // FIXME: захардкожено
         if (health.current <= 0.0f)
@@ -112,6 +117,7 @@ public class Character : MonoBehaviour
         Vector3 distance = targetPosition - transform.position;
         if (distance.magnitude < 0.00001f) {
             transform.position = targetPosition;
+            soundPlayer.Stop();
             return true;
         }
 
@@ -124,10 +130,12 @@ public class Character : MonoBehaviour
         Vector3 step = direction * runSpeed;
         if (step.magnitude < distance.magnitude) {
             transform.position += step;
+            soundPlayer.Play("Steps", true);
             return false;
         }
 
         transform.position = targetPosition;
+        soundPlayer.Stop();
         return true;
     }
 
@@ -156,6 +164,8 @@ public class Character : MonoBehaviour
 
             case State.BeginAttack:
                 animator.SetTrigger(MeleeAttack);
+                if (soundPlayer)
+                    soundPlayer.Play("BatHit");
                 state = State.Attack;
                 break;
 
@@ -168,6 +178,8 @@ public class Character : MonoBehaviour
                 break;
 
             case State.Shoot:
+                if (soundPlayer)
+                    soundPlayer.Play("ShootHit");
                 break;
 
             case State.BeginPunch:
@@ -176,6 +188,8 @@ public class Character : MonoBehaviour
                 break;
 
             case State.Punch:
+                if (soundPlayer)
+                    soundPlayer.Play("HandHit");
                 break;
 
             case State.RunningFromEnemy:
@@ -186,6 +200,8 @@ public class Character : MonoBehaviour
 
             case State.BeginDying:
                 animator.SetTrigger(Death);
+                if (soundPlayer)
+                    soundPlayer.Play("Death");
                 state = State.Dead;
                 break;
 

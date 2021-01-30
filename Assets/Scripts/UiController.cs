@@ -3,11 +3,13 @@ using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.Audio;
 
 public class UiController : MonoBehaviour
 {
     private bool controlMenuState;
     private TextMeshProUGUI gameResultView;
+    private PlaySound soundPlayer;
 
     public UiElement controlMenu;
     public CanvasGroup pauseButton;
@@ -18,6 +20,10 @@ public class UiController : MonoBehaviour
 
     public void PauseGame()
     {
+        foreach (var source in FindObjectsOfType<AudioSource>())
+        {
+            source.Pause();
+        }
         controlMenuState = controlMenu.IsVisible();
         controlMenu.Hide();
         Utility.SetCanvasGroupEnabled(pauseButton, false);
@@ -27,6 +33,10 @@ public class UiController : MonoBehaviour
 
     public void ResumeGame()
     {
+        foreach (var source in FindObjectsOfType<AudioSource>())
+        {
+            source.UnPause();
+        }
         Utility.SetCanvasGroupEnabled(pauseMenu, false);
         Utility.SetCanvasGroupEnabled(pauseButton, true);
         if(controlMenuState)
@@ -55,6 +65,9 @@ public class UiController : MonoBehaviour
         Utility.SetCanvasGroupEnabled(pauseButton, false);
         Utility.SetCanvasGroupEnabled(pauseMenu, false);
         Utility.SetCanvasGroupEnabled(endGameMenu, true);
+
+        if (soundPlayer)
+            soundPlayer.Play(won ? "Win" : "Lose");
     }
 
     public void SetControlCallbacks(UnityAction switchAction, UnityAction attackAction)
@@ -63,8 +76,21 @@ public class UiController : MonoBehaviour
         attackButton.onClick.AddListener(attackAction);
     }
 
+    public void PlayClickSound()
+    {
+        if(soundPlayer)
+            soundPlayer.Play("Click");
+    }
+
     void Start()
     {
+        soundPlayer = GetComponent<PlaySound>();
+
+        foreach (var button in GetComponentsInChildren<Button>())
+        {
+            button.onClick.AddListener(PlayClickSound);
+        }
+
         gameResultView = endGameMenu.GetComponentInChildren<TextMeshProUGUI>();
         Utility.SetCanvasGroupEnabled(endGameMenu, false);
         Utility.SetCanvasGroupEnabled(pauseMenu, false);
