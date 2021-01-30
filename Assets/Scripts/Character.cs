@@ -184,12 +184,12 @@ public class Character : MonoBehaviour
 
             case State.BeginPunch:
                 animator.SetTrigger(Punch);
+                if (soundPlayer)
+                    soundPlayer.Play("HandHit");
                 state = State.Punch;
                 break;
 
             case State.Punch:
-                if (soundPlayer)
-                    soundPlayer.Play("HandHit");
                 break;
 
             case State.RunningFromEnemy:
