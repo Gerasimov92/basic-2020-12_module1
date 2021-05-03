@@ -27,9 +27,9 @@ public class CharacterAnimationEvents : MonoBehaviour
 
     void DoDamage()
     {
-        if (shootAnimation) shootAnimation.Play();
-        
-        Character targetCharacter = character.target.GetComponent<Character>();
-        targetCharacter.DoDamage();
+        if (shootAnimation)
+            shootAnimation.Play();
+
+        character.target.DoDamage();
     }
 }

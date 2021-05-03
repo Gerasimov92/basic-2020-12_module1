@@ -6,9 +6,16 @@ public class DamageEffect : MonoBehaviour
 {
     public GameObject damageEffect;
 
+    private ParticleSystem[] effects;
+
+    void Start()
+    {
+        effects = damageEffect.GetComponentsInChildren<ParticleSystem>();
+    }
+
     public void ShowDamageEffect()
     {
-        foreach (var effect in damageEffect.GetComponentsInChildren<ParticleSystem>())
+        foreach (var effect in effects)
         {
             effect.Play();
         }

@@ -25,14 +25,14 @@ public class Character : MonoBehaviour
         Fist,
     }
 
-    private Animator animator;
-    private State state;
-
     public Weapon weapon;
-    public Transform target;
+    public Character target;
     public TargetIndicator targetIndicator;
     public float runSpeed;
     public float distanceFromEnemy;
+
+    private Animator animator;
+    private State state;
     private Vector3 originalPosition;
     private Quaternion originalRotation;
     private Health health;
@@ -42,6 +42,7 @@ public class Character : MonoBehaviour
     private static readonly int Shoot = Animator.StringToHash("Shoot");
     private static readonly int MeleeAttack = Animator.StringToHash("MeleeAttack");
     private PlaySound soundPlayer;
+    private DamageEffect damageEffect;
 
     void Start()
     {
@@ -50,8 +51,10 @@ public class Character : MonoBehaviour
         health = GetComponent<Health>();
         targetIndicator = GetComponentInChildren<TargetIndicator>(true);
         soundPlayer = GetComponent<PlaySound>();
-        originalPosition = transform.position;
-        originalRotation = transform.rotation;
+        damageEffect = GetComponent<DamageEffect>();
+        var t = transform;
+        originalPosition = t.position;
+        originalRotation = t.rotation;
     }
 
     public bool IsIdle()
@@ -76,9 +79,9 @@ public class Character : MonoBehaviour
     {
         if (IsDead())
             return;
-        
-        DamageEffect damageEffect = GetComponent<DamageEffect>();
-        if (damageEffect) damageEffect.ShowDamageEffect();
+
+        if (damageEffect)
+            damageEffect.ShowDamageEffect();
 
         if (soundPlayer)
             soundPlayer.Play("TakeDamage");
@@ -88,15 +91,15 @@ public class Character : MonoBehaviour
             state = State.BeginDying;
     }
 
-    [ContextMenu("Attack")]
-    public void AttackEnemy()
+    public void AttackEnemy(Character enemy)
     {
         if (IsDead())
             return;
 
-        Character targetCharacter = target.GetComponent<Character>();
-        if (targetCharacter.IsDead())
+        target = enemy;
+        if (target.IsDead())
             return;
+
         switch (weapon) {
             case Weapon.Bat:
                 state = State.RunningToEnemy;
@@ -114,7 +117,9 @@ public class Character : MonoBehaviour
 
     bool RunTowards(Vector3 targetPosition, float distanceFromTarget)
     {
-        Vector3 distance = targetPosition - transform.position;
+        var currentTransform = transform;
+
+        Vector3 distance = targetPosition - currentTransform.position;
         if (distance.magnitude < 0.00001f) {
             transform.position = targetPosition;
             soundPlayer.Stop();
@@ -125,7 +130,7 @@ public class Character : MonoBehaviour
         transform.rotation = Quaternion.LookRotation(direction);
 
         targetPosition -= direction * distanceFromTarget;
-        distance = (targetPosition - transform.position);
+        distance = (targetPosition - currentTransform.position);
 
         Vector3 step = direction * runSpeed;
         if (step.magnitude < distance.magnitude) {
@@ -149,7 +154,7 @@ public class Character : MonoBehaviour
 
             case State.RunningToEnemy:
                 animator.SetFloat(Speed, runSpeed);
-                if (RunTowards(target.position, distanceFromEnemy)){
+                if (RunTowards(target.transform.position, distanceFromEnemy)){
                     switch (weapon) {
                         case Weapon.Bat:
                             state = State.BeginAttack;

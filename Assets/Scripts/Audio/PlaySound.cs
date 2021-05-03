@@ -15,13 +15,16 @@ public class PlaySound : MonoBehaviour
         _audioSource = GetComponent<AudioSource>();
     }
 
-    public void Play(string nameClip, bool loop = false)
+    public void Play(string clipName, bool loop = false)
     {
-        var audioClip = GetAudioClip(nameClip);
-        if (_audioSource.clip != audioClip)
+        var dataSound = dataSounds.Find(sound => sound.name == clipName);
+        if (dataSound == null)
+            return;
+
+        if (_audioSource.clip != dataSound.audioClip)
         {
             _audioSource.loop = loop;
-            _audioSource.clip = audioClip;
+            _audioSource.clip = dataSound.audioClip;
             _audioSource.Play();
         }
         else if (!_audioSource.isPlaying)
@@ -36,19 +39,6 @@ public class PlaySound : MonoBehaviour
         _audioSource.Stop();
     }
 
-    private AudioClip GetAudioClip(string nameClip)
-    {
-        AudioClip clip = null;
-        
-        foreach (var sound in dataSounds)
-        {
-            if (sound.name == nameClip)
-                clip = sound.audioClip;
-        }
-
-        return clip;
-    }
-    
     [Serializable]
     private class DataSound
     {

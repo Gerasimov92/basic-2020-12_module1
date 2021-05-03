@@ -12,31 +12,32 @@ internal sealed class GameController : MonoBehaviour
     Character currentTarget;
     bool waitingForInput;
 
-    Character FirstAliveCharacter(Character[] characters)
+    (Character, bool allDead) FirstAliveCharacter(Character[] characters)
     {
-        return characters.FirstOrDefault(character => !character.IsDead());
+        var ch = characters.FirstOrDefault(character => !character.IsDead());
+        return (ch, object.ReferenceEquals(ch, null));
     }
 
     void PlayerWon()
     {
-        Debug.Log("Player won.");
         uiController.ShowGameResult(true);
     }
 
     void PlayerLost()
     {
-        Debug.Log("Player lost.");
         uiController.ShowGameResult(false);
     }
 
     bool CheckEndGame()
     {
-        if (FirstAliveCharacter(playerCharacter) == null) {
+        var (_, allDead) = FirstAliveCharacter(playerCharacter);
+        if (allDead) {
             PlayerLost();
             return true;
         }
 
-        if (FirstAliveCharacter(enemyCharacter) == null) {
+        (_, allDead) = FirstAliveCharacter(enemyCharacter);
+        if (allDead) {
             PlayerWon();
             return true;
         }
@@ -63,7 +64,6 @@ internal sealed class GameController : MonoBehaviour
         }
     }
 
-
     IEnumerator GameLoop()
     {
         yield return null;
@@ -72,9 +72,10 @@ internal sealed class GameController : MonoBehaviour
             {
                 if (player.IsDead())
                     continue;
-                
-                currentTarget = FirstAliveCharacter(enemyCharacter);
-                if (currentTarget == null)
+
+                bool allDead;
+                (currentTarget, allDead) = FirstAliveCharacter(enemyCharacter);
+                if (allDead)
                     break;
 
                 currentTarget.targetIndicator.gameObject.SetActive(true);
@@ -87,8 +88,7 @@ internal sealed class GameController : MonoBehaviour
                 uiController.controlMenu.Hide(true);
                 currentTarget.targetIndicator.gameObject.SetActive(false);
 
-                player.target = currentTarget.transform;
-                player.AttackEnemy();
+                player.AttackEnemy(currentTarget);
 
                 while (!player.IsIdle())
                     yield return null;
@@ -101,12 +101,11 @@ internal sealed class GameController : MonoBehaviour
                 if (enemy.IsDead())
                     continue;
                 
-                Character target = FirstAliveCharacter(playerCharacter);
-                if (target == null)
+                var (target, allDead) = FirstAliveCharacter(playerCharacter);
+                if (allDead)
                     break;
 
-                enemy.target = target.transform;
-                enemy.AttackEnemy();
+                enemy.AttackEnemy(target);
 
                 while (!enemy.IsIdle())
                     yield return null;
